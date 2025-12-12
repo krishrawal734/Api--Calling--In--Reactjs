@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  const [data, setData] = useState([]);           // <-- useState, not usedata
+  const [data, setData] = useState([]); 
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
     try {
-      const res = await fetch("https://dummyjson.com/products");
+      const res = await fetch("https://randomuser.me/api/?results=20");
       const json = await res.json();
-      setData(json.products);
+      setData(json.results); // <-- array of users
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -24,7 +24,7 @@ const Home = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 p-6">
-        <h1 className="text-3xl font-bold mb-6 text-center">Products</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center">Users</h1>
         <h2 className="text-xl text-center text-gray-600">Loading...</h2>
       </div>
     );
@@ -32,28 +32,42 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">Products</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">Users</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {data.map((item) => (
-          <div key={item.id} className="bg-white shadow-lg rounded-xl p-4 hover:shadow-xl transition">
-            <img
-              src={item.thumbnail}                     // using real image
-              alt={item.title}
-              className="h-40 w-full object-contain mb-3"
-            />
-            <h3 className="font-semibold text-lg">{item.title}</h3>
-            <p className="text-gray-600 text-sm mt-1">{item.description}</p>
-            <p className="text-yellow-600 font-medium">⭐ {item.rating}</p>
+        {data.map((user, index) => (
+          <div
+            key={index}
+            className="bg-white shadow-lg rounded-xl p-4 hover:shadow-xl transition"
+          >
+            <div className="flex justify-center mb-3">
+              <img
+                src={user.picture.large}
+                alt={`${user.name.first} ${user.name.last}`}
+                className="w-32 h-32 rounded-full border-4 border-indigo-500 object-cover"
+              />
+            </div>
 
-            <div className="mt-3 flex justify-between items-center">
-              <span className="text-lg font-bold">${item.price}</span>
+            <h2 className="text-xl font-semibold text-center text-gray-800">
+              {user.name.first} {user.name.last}
+            </h2>
 
-              <Link to={`/products/${item.id}`}>
-                <button className="px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                  View
-                </button>
-              </Link>
+            <p className="text-center text-gray-600 mt-2">{user.email}</p>
+
+            <p className="text-center text-gray-600 mt-1">
+              {user.location.city}, {user.location.country}
+            </p>
+
+            {/* Optional: Example of a button (no real product route) */}
+            <div className="mt-3 flex justify-center">
+             <Link
+  to={`/user/${index}`}
+  state={{ user }}               // ✅ pass user object
+>
+  <button className="px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+    View
+  </button>
+</Link>
             </div>
           </div>
         ))}

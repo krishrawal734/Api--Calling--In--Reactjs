@@ -1,23 +1,31 @@
-import { useState } from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./page/Home";
+import UserView from "./page/UserView";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
 
-import './App.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from './page/Home'
-import Productview from './page/Productview'
+
 
 function App() {
-  const [count, setCount] = useState(0)
-return (
+  return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      
-        <Route path="/products/:id" element={<Productview />} />
-     
-        
-      </Routes>
+      <div className="flex flex-col min-h-screen">
+        {/* Header at top */}
+        <Header />
+
+        {/* Main content grows */}
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/user/:id" element={<UserView />} />
+          </Routes>
+        </main>
+
+        {/* Footer at bottom */}
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 }
 
-export default App
+export default App;
